@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood Scripture • LDS</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #002b5c;
+      text-align: center;
+    }
+    p {
+      text-align: center;
+      color: #555;
+    }
+    .moods {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 30px 0;
+    }
+    button {
+      padding: 18px 12px;
+      font-size: 16px;
+      background: white;
+      border: 2px solid #002b5c;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #002b5c;
+      color: white;
+    }
+    #verse-display {
+      margin-top: 30px;
+      padding: 25px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      min-height: 220px;
+    }
+    .verse {
+      font-style: italic;
+      margin-top: 15px;
+      color: #444;
+    }
+    button.random {
+      background: #e6f0ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Mood Scripture</h1>
+  <p>Welcome. Tap your current mood to receive a random uplifting scripture from the Latter-day Saint canon.</p>
+
+  <div class="moods">
+    <button onclick="showRandomVerse('sad')">Sad / Discouraged</button>
+    <button onclick="showRandomVerse('anxious')">Anxious / Worried</button>
+    <button onclick="showRandomVerse('overwhelmed')">Overwhelmed</button>
+    <button onclick="showRandomVerse('tempted')">Tempted</button>
+    <button onclick="showRandomVerse('angry')">Angry / Frustrated</button>
+    <button onclick="showRandomVerse('lonely')">Lonely</button>
+    <button onclick="showRandomVerse('seeking')">Seeking Direction</button>
+    <button onclick="showRandomVerse('humbled')">Humbled / Repentant</button>
+    <button onclick="showRandomVerse('grateful')">Grateful</button>
+    <button onclick="showRandomVerse('peaceful')">Peaceful / Content</button>
+  </div>
+
+  <div id="verse-display">
+    <strong>Your random scripture will appear here.</strong>
+  </div>
+
+  <script>
+    const scriptures = {
+      sad: [
+        "He will take upon him their infirmities... that his bowels may be filled with mercy... — Alma 7:11-12",
+        "The Lord is nigh unto them that are of a broken heart... — Psalm 34:18",
+        "I will not leave you comfortless... — John 14:18"
+      ],
+      anxious: [
+        "Peace I leave with you... Let not your heart be troubled... — John 14:27",
+        "Be still, and know that I am God... — Psalm 46:10",
+        "Casting all your care upon him; for he careth for you. — 1 Peter 5:7"
+      ],
+      overwhelmed: [
+        "Come unto me, all ye that labour and are heavy laden, and I will give you rest. — Matthew 11:28",
+        "I will ease the burdens which are put upon your shoulders... — Mosiah 24:14",
+        "My grace is sufficient for thee... — 2 Corinthians 12:9"
+      ],
+      tempted: [
+        "There hath no temptation taken you but such as is common to man: but God is faithful... — 1 Corinthians 10:13",
+        "Watch and pray, that ye enter not into temptation... — Matthew 26:41",
+        "Submit yourselves therefore to God. Resist the devil... — James 4:7"
+      ],
+      angry: [
+        "Cease to contend one with another... cease to be angry... — D&C 136:23",
+        "Let all bitterness... be put away from you... — Ephesians 4:31-32",
+        "A soft answer turneth away wrath... — Proverbs 15:1"
+      ],
+      lonely: [
+        "I will not leave you comfortless: I will come to you. — John 14:18",
+        "The Lord thy God... he it is that doth go with thee... — Deuteronomy 31:6",
+        "I am with thee... be not dismayed... — Isaiah 41:10"
+      ],
+      seeking: [
+        "If any of you lack wisdom, let him ask of God... — James 1:5",
+        "Ask, and it shall be given you... — Matthew 7:7",
+        "I will impart unto you of my Spirit... — D&C 42:61"
+      ],
+      humbled: [
+        "If men come unto me I will show unto them their weakness... my grace is sufficient... — Ether 12:27",
+        "Humble yourselves before the Lord... he will lift you up. — James 4:10",
+        "God resisteth the proud, but giveth grace unto the humble. — James 4:6"
+      ],
+      grateful: [
+        "In everything give thanks... — D&C 59:7",
+        "O give thanks unto the Lord... — Psalm 136:1",
+        "He hath filled me with his love... — 1 Nephi 11:23"
+      ],
+      peaceful: [
+        "Peace, peace be unto you... because of your faith... — D&C 121:7-8",
+        "The peace of God... shall keep your hearts... — Philippians 4:7",
+        "My soul hath found rest... — Jacob 3:13 (adapted)"
+      ]
+    };
+
+    function showRandomVerse(mood) {
+      const display = document.getElementById("verse-display");
+      const options = scriptures[mood];
+      const randomVerse = options[Math.floor(Math.random() * options.length)];
+      
+      display.innerHTML = `
+        <strong>${mood.charAt(0).toUpperCase() + mood.slice(1)}:</strong><br><br>
+        ${randomVerse}
+      `;
+    }
+  </script>
+</body>
+</html>
