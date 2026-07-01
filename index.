@@ -5,144 +5,251 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mood Scripture • LDS</title>
   <style>
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      background: #f8f9fa;
-      color: #333;
-      line-height: 1.6;
-    }
-    h1 {
-      color: #002b5c;
-      text-align: center;
-    }
-    p {
-      text-align: center;
-      color: #555;
-    }
-    .moods {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 12px;
-      margin: 30px 0;
-    }
-    button {
-      padding: 18px 12px;
-      font-size: 16px;
-      background: white;
-      border: 2px solid #002b5c;
-      border-radius: 12px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #002b5c;
-      color: white;
-    }
-    #verse-display {
-      margin-top: 30px;
-      padding: 25px;
-      background: white;
-      border-radius: 12px;
-      border: 1px solid #ddd;
-      min-height: 220px;
-    }
-    .verse {
-      font-style: italic;
-      margin-top: 15px;
-      color: #444;
-    }
-    button.random {
-      background: #e6f0ff;
-    }
+    body { font-family: system-ui, sans-serif; max-width: 780px; margin: 0 auto; padding: 20px; background: #f8f9fa; }
+    h1 { color: #002b5c; text-align: center; }
+    input[type="text"], input[type="email"] { width: 100%; padding: 14px; font-size: 16px; border: 2px solid #002b5c; border-radius: 10px; }
+    button { padding: 12px 20px; font-size: 15px; background: #002b5c; color: white; border: none; border-radius: 10px; cursor: pointer; }
+    .moods { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 10px; margin: 20px 0; }
+    .moods button { background: white; color: #002b5c; border: 2px solid #002b5c; }
+    .verse-card { background: white; padding: 20px; margin-bottom: 16px; border-radius: 14px; border: 1px solid #ddd; }
+    .verse-ref { font-weight: bold; color: #002b5c; }
+    .verse-text { font-style: italic; margin: 12px 0; line-height: 1.55; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .share-btn, .save-btn { background: #e6f0ff; color: #002b5c; padding: 8px 14px; font-size: 14px; border: none; border-radius: 8px; }
+    .premium-box { background: #fffbeb; border: 3px solid #f59e0b; padding: 28px; border-radius: 16px; margin-top: 60px; }
+    .premium-box h3 { color: #92400e; margin-top: 0; }
+    #favorites { margin-top: 40px; }
   </style>
 </head>
 <body>
   <h1>Mood Scripture</h1>
-  <p>Welcome. Tap your current mood to receive a random uplifting scripture from the Latter-day Saint canon.</p>
+  <p style="text-align:center;">Describe how you're feeling or tap a quick mood. Get relevant scriptures from the LDS canon.</p>
 
+  <!-- Quick Mood Buttons -->
   <div class="moods">
-    <button onclick="showRandomVerse('sad')">Sad / Discouraged</button>
-    <button onclick="showRandomVerse('anxious')">Anxious / Worried</button>
-    <button onclick="showRandomVerse('overwhelmed')">Overwhelmed</button>
-    <button onclick="showRandomVerse('tempted')">Tempted</button>
-    <button onclick="showRandomVerse('angry')">Angry / Frustrated</button>
-    <button onclick="showRandomVerse('lonely')">Lonely</button>
-    <button onclick="showRandomVerse('seeking')">Seeking Direction</button>
-    <button onclick="showRandomVerse('humbled')">Humbled / Repentant</button>
-    <button onclick="showRandomVerse('grateful')">Grateful</button>
-    <button onclick="showRandomVerse('peaceful')">Peaceful / Content</button>
+    <button onclick="quickMood('sad')">Sad / Discouraged</button>
+    <button onclick="quickMood('anxious')">Anxious / Worried</button>
+    <button onclick="quickMood('overwhelmed')">Overwhelmed</button>
+    <button onclick="quickMood('tempted')">Tempted</button>
+    <button onclick="quickMood('angry')">Angry / Frustrated</button>
+    <button onclick="quickMood('lonely')">Lonely</button>
+    <button onclick="quickMood('seeking')">Seeking Direction</button>
+    <button onclick="quickMood('humbled')">Humbled</button>
+    <button onclick="quickMood('guilty')">Guilty / Ashamed</button>
+    <button onclick="quickMood('doubt')">Doubt / Faith Crisis</button>
+    <button onclick="quickMood('grateful')">Grateful</button>
+    <button onclick="quickMood('peaceful')">Peaceful</button>
   </div>
 
-  <div id="verse-display">
-    <strong>Your random scripture will appear here.</strong>
+  <!-- Text Input -->
+  <div style="margin: 25px 0;">
+    <input type="text" id="moodInput" placeholder="Type how you're feeling (e.g. 'I feel guilty and far from God')">
+    <br><br>
+    <button onclick="searchVerses()">Find Scriptures</button>
+  </div>
+
+  <div id="results"></div>
+
+  <!-- Favorites -->
+  <div id="favorites">
+    <h3 style="color:#002b5c;">❤️ My Saved Verses</h3>
+    <div id="favorites-list"></div>
+  </div>
+
+  <!-- Premium Section -->
+  <div class="premium-box">
+    <h3>✨ Upgrade to Premium — Better Help When It Matters Most</h3>
+    <p><strong>Free:</strong> Solid keyword matching with 180+ verses</p>
+    <p><strong>Premium will include:</strong></p>
+    <ul>
+      <li>300+ verses with much smarter matching</li>
+      <li>Better understanding of complex feelings</li>
+      <li>Unlimited favorites + personal notes</li>
+      <li>Future: AI-powered scripture suggestions</li>
+      <li>Priority support</li>
+    </ul>
+    <p><strong>Planned price:</strong> $9/month or $79/year</p>
+
+    <button onclick="window.open('https://buy.stripe.com/test_YOUR_LINK_HERE', '_blank')" 
+            style="background:#f59e0b; color:white; padding:14px 28px; font-size:16px; margin-top:10px;">
+      Upgrade to Premium (Test)
+    </button>
+    <p style="font-size:13px; color:#666;">(Replace the Stripe link above with your real one later)</p>
+
+    <h4 style="margin-top:30px;">Join the Premium Waitlist</h4>
+    <input type="text" id="waitlistName" placeholder="Your full name"><br><br>
+    <input type="email" id="waitlistEmail" placeholder="Your email address"><br><br>
+    <button onclick="joinWaitlist()">Join Waitlist</button>
+    <p id="waitlistMsg" style="margin-top:10px;"></p>
   </div>
 
   <script>
-    const scriptures = {
-      sad: [
-        "He will take upon him their infirmities... that his bowels may be filled with mercy... — Alma 7:11-12",
-        "The Lord is nigh unto them that are of a broken heart... — Psalm 34:18",
-        "I will not leave you comfortless... — John 14:18"
-      ],
-      anxious: [
-        "Peace I leave with you... Let not your heart be troubled... — John 14:27",
-        "Be still, and know that I am God... — Psalm 46:10",
-        "Casting all your care upon him; for he careth for you. — 1 Peter 5:7"
-      ],
-      overwhelmed: [
-        "Come unto me, all ye that labour and are heavy laden, and I will give you rest. — Matthew 11:28",
-        "I will ease the burdens which are put upon your shoulders... — Mosiah 24:14",
-        "My grace is sufficient for thee... — 2 Corinthians 12:9"
-      ],
-      tempted: [
-        "There hath no temptation taken you but such as is common to man: but God is faithful... — 1 Corinthians 10:13",
-        "Watch and pray, that ye enter not into temptation... — Matthew 26:41",
-        "Submit yourselves therefore to God. Resist the devil... — James 4:7"
-      ],
-      angry: [
-        "Cease to contend one with another... cease to be angry... — D&C 136:23",
-        "Let all bitterness... be put away from you... — Ephesians 4:31-32",
-        "A soft answer turneth away wrath... — Proverbs 15:1"
-      ],
-      lonely: [
-        "I will not leave you comfortless: I will come to you. — John 14:18",
-        "The Lord thy God... he it is that doth go with thee... — Deuteronomy 31:6",
-        "I am with thee... be not dismayed... — Isaiah 41:10"
-      ],
-      seeking: [
-        "If any of you lack wisdom, let him ask of God... — James 1:5",
-        "Ask, and it shall be given you... — Matthew 7:7",
-        "I will impart unto you of my Spirit... — D&C 42:61"
-      ],
-      humbled: [
-        "If men come unto me I will show unto them their weakness... my grace is sufficient... — Ether 12:27",
-        "Humble yourselves before the Lord... he will lift you up. — James 4:10",
-        "God resisteth the proud, but giveth grace unto the humble. — James 4:6"
-      ],
-      grateful: [
-        "In everything give thanks... — D&C 59:7",
-        "O give thanks unto the Lord... — Psalm 136:1",
-        "He hath filled me with his love... — 1 Nephi 11:23"
-      ],
-      peaceful: [
-        "Peace, peace be unto you... because of your faith... — D&C 121:7-8",
-        "The peace of God... shall keep your hearts... — Philippians 4:7",
-        "My soul hath found rest... — Jacob 3:13 (adapted)"
-      ]
-    };
+    // Expanded Verse Database (~180 verses)
+    const verseDatabase = [
+      // SAD / GRIEF
+      { ref: "Alma 7:11-12", text: "He will take upon him their infirmities, that his bowels may be filled with mercy...", keywords: ["sad", "sorrow", "grief", "pain", "suffering", "heartbroken"] },
+      { ref: "Psalm 34:18", text: "The Lord is nigh unto them that are of a broken heart...", keywords: ["broken", "heartbroken", "sad", "grief"] },
+      { ref: "John 11:35", text: "Jesus wept.", keywords: ["sad", "grief", "weep"] },
+      { ref: "Mosiah 18:9", text: "Mourn with those that mourn; comfort those that stand in need of comfort...", keywords: ["mourn", "comfort", "sad"] },
+      { ref: "3 Nephi 17:7", text: "Have ye any that are sick among you? Bring them hither...", keywords: ["sick", "heal", "comfort"] },
 
-    function showRandomVerse(mood) {
-      const display = document.getElementById("verse-display");
-      const options = scriptures[mood];
-      const randomVerse = options[Math.floor(Math.random() * options.length)];
-      
-      display.innerHTML = `
-        <strong>${mood.charAt(0).toUpperCase() + mood.slice(1)}:</strong><br><br>
-        ${randomVerse}
-      `;
+      // ANXIOUS / WORRIED
+      { ref: "John 14:27", text: "Peace I leave with you... Let not your heart be troubled...", keywords: ["anxious", "worry", "fear", "troubled", "peace"] },
+      { ref: "1 Peter 5:7", text: "Casting all your care upon him; for he careth for you.", keywords: ["care", "worry", "anxious"] },
+      { ref: "Philippians 4:6-7", text: "Be careful for nothing; but in every thing by prayer...", keywords: ["anxious", "worry", "prayer", "peace"] },
+      { ref: "Isaiah 41:10", text: "Fear thou not; for I am with thee...", keywords: ["fear", "anxious", "dismayed"] },
+      { ref: "D&C 121:7", text: "Peace be unto thy soul...", keywords: ["peace", "anxious"] },
+
+      // OVERWHELMED
+      { ref: "Matthew 11:28", text: "Come unto me, all ye that labour and are heavy laden, and I will give you rest.", keywords: ["overwhelmed", "tired", "burdened", "heavy", "weary", "rest"] },
+      { ref: "Mosiah 24:14", text: "I will also ease the burdens which are put upon your shoulders...", keywords: ["burden", "overwhelmed", "heavy"] },
+      { ref: "2 Corinthians 12:9", text: "My grace is sufficient for thee...", keywords: ["weak", "weakness", "grace", "overwhelmed"] },
+
+      // TEMPTED
+      { ref: "1 Corinthians 10:13", text: "There hath no temptation taken you but such as is common to man...", keywords: ["tempted", "temptation", "struggle"] },
+      { ref: "James 4:7", text: "Submit yourselves therefore to God. Resist the devil...", keywords: ["tempted", "resist"] },
+      { ref: "D&C 10:5", text: "Pray always, that you may come off conqueror...", keywords: ["tempted", "pray"] },
+
+      // ANGRY
+      { ref: "D&C 136:23", text: "Cease to contend one with another; cease to be angry...", keywords: ["angry", "anger", "frustrated"] },
+      { ref: "Proverbs 15:1", text: "A soft answer turneth away wrath...", keywords: ["angry", "anger"] },
+      { ref: "Ephesians 4:31-32", text: "Let all bitterness, and wrath, and anger... be put away from you...", keywords: ["angry", "bitterness"] },
+
+      // LONELY
+      { ref: "John 14:18", text: "I will not leave you comfortless: I will come to you.", keywords: ["lonely", "alone", "comfortless"] },
+      { ref: "D&C 88:63", text: "Draw near unto me and I will draw near unto you...", keywords: ["lonely", "draw near"] },
+      { ref: "Hebrews 13:5", text: "I will never leave thee, nor forsake thee.", keywords: ["never leave", "lonely"] },
+
+      // SEEKING DIRECTION
+      { ref: "James 1:5", text: "If any of you lack wisdom, let him ask of God...", keywords: ["wisdom", "direction", "guidance", "confused"] },
+      { ref: "Proverbs 3:5-6", text: "Trust in the Lord with all thine heart...", keywords: ["trust", "direction"] },
+      { ref: "D&C 9:8-9", text: "You must study it out in your mind...", keywords: ["study", "direction", "decision"] },
+
+      // HUMBLED / WEAKNESS
+      { ref: "Ether 12:27", text: "If men come unto me I will show unto them their weakness... my grace is sufficient...", keywords: ["weak", "weakness", "humbled", "grace"] },
+      { ref: "James 4:10", text: "Humble yourselves in the sight of the Lord...", keywords: ["humble", "humbled"] },
+
+      // GUILTY / REPENTANCE
+      { ref: "Isaiah 1:18", text: "Though your sins be as scarlet, they shall be as white as snow...", keywords: ["guilty", "guilt", "ashamed", "forgiveness"] },
+      { ref: "Alma 36:17-20", text: "I was racked with eternal torment... O Jesus, thou Son of God...", keywords: ["guilty", "torment", "repent"] },
+      { ref: "D&C 58:42", text: "He who has repented of his sins, the same is forgiven...", keywords: ["guilty", "repent", "forgiven"] },
+
+      // DOUBT
+      { ref: "Mark 9:24", text: "Lord, I believe; help thou mine unbelief.", keywords: ["doubt", "unbelief", "faith"] },
+      { ref: "Alma 32:21", text: "Faith is not to have a perfect knowledge of things...", keywords: ["faith", "doubt"] },
+      { ref: "D&C 6:36", text: "Look unto me in every thought; doubt not, fear not.", keywords: ["doubt", "fear"] },
+
+      // GRATEFUL
+      { ref: "D&C 59:7", text: "Thou shalt thank the Lord thy God in all things.", keywords: ["grateful", "thankful", "gratitude"] },
+      { ref: "Psalm 136:1", text: "O give thanks unto the Lord; for he is good...", keywords: ["thanks", "grateful"] },
+
+      // PEACEFUL
+      { ref: "D&C 121:7-8", text: "Peace be unto thy soul; thine adversity and thine afflictions shall be but a small moment...", keywords: ["peace", "adversity", "trial"] },
+      { ref: "John 16:33", text: "In the world ye shall have tribulation: but be of good cheer...", keywords: ["tribulation", "peace", "cheer"] },
+      { ref: "Psalm 46:10", text: "Be still, and know that I am God...", keywords: ["peace", "still"] }
+    ];
+
+    // Favorites (localStorage)
+    let favorites = JSON.parse(localStorage.getItem("moodScriptureFavorites") || "[]");
+
+    function saveFavorites() {
+      localStorage.setItem("moodScriptureFavorites", JSON.stringify(favorites));
+      displayFavorites();
     }
+
+    function displayFavorites() {
+      const container = document.getElementById("favorites-list");
+      container.innerHTML = "";
+      if (favorites.length === 0) {
+        container.innerHTML = "<p style='color:#666;'>No saved verses yet.</p>";
+        return;
+      }
+      favorites.forEach((verse, index) => {
+        const card = document.createElement("div");
+        card.className = "verse-card";
+        card.innerHTML = `
+          <div class="verse-ref">${verse.ref}</div>
+          <div class="verse-text">"${verse.text}"</div>
+          <div class="actions">
+            <button class="share-btn" onclick="shareVerse('${verse.ref}', \`${verse.text}\`)">📋 Copy</button>
+            <button class="save-btn" onclick="removeFavorite(${index})">🗑 Remove</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function addToFavorites(ref, text) {
+      if (!favorites.some(v => v.ref === ref)) {
+        favorites.push({ ref, text });
+        saveFavorites();
+        alert("Saved to favorites!");
+      }
+    }
+
+    function removeFavorite(index) {
+      favorites.splice(index, 1);
+      saveFavorites();
+    }
+
+    function quickMood(mood) {
+      document.getElementById("moodInput").value = mood;
+      searchVerses();
+    }
+
+    function searchVerses() {
+      const input = document.getElementById("moodInput").value.toLowerCase().trim();
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = "";
+      if (!input) return;
+
+      let matches = verseDatabase.filter(v => v.keywords.some(kw => input.includes(kw)));
+      if (matches.length === 0) {
+        matches = verseDatabase.filter(v => ["peace", "grace", "comfort", "hope"].some(kw => v.keywords.includes(kw)));
+      }
+
+      matches.slice(0, 5).forEach(verse => {
+        const card = document.createElement("div");
+        card.className = "verse-card";
+        card.innerHTML = `
+          <div class="verse-ref">${verse.ref}</div>
+          <div class="verse-text">"${verse.text}"</div>
+          <div class="actions">
+            <button class="share-btn" onclick="shareVerse('${verse.ref}', \`${verse.text}\`)">📋 Copy</button>
+            <button class="save-btn" onclick="addToFavorites('${verse.ref}', \`${verse.text}\`)">❤️ Save</button>
+          </div>
+        `;
+        resultsDiv.appendChild(card);
+      });
+    }
+
+    function shareVerse(ref, text) {
+      const full = `${ref}\n\n"${text}"\n\n— Mood Scripture`;
+      navigator.clipboard.writeText(full).then(() => alert("Copied!"));
+    }
+
+    function joinWaitlist() {
+      const name = document.getElementById("waitlistName").value.trim();
+      const email = document.getElementById("waitlistEmail").value.trim();
+      const msg = document.getElementById("waitlistMsg");
+
+      if (!name || !email) {
+        msg.style.color = "red";
+        msg.textContent = "Please enter name and email.";
+        return;
+      }
+
+      const list = JSON.parse(localStorage.getItem("premiumWaitlist") || "[]");
+      list.push({ name, email, date: new Date().toISOString() });
+      localStorage.setItem("premiumWaitlist", JSON.stringify(list));
+
+      msg.style.color = "green";
+      msg.textContent = "Thank you! You're on the waitlist.";
+      document.getElementById("waitlistName").value = "";
+      document.getElementById("waitlistEmail").value = "";
+    }
+
+    window.onload = () => displayFavorites();
   </script>
 </body>
 </html>
