@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mood Scripture • LDS</title>
+  <title>Mood Scripture</title>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 780px; margin: 0 auto; padding: 20px; background: #f8f9fa; }
     h1 { color: #002b5c; text-align: center; }
@@ -19,6 +19,7 @@
     .premium-box { background: #fffbeb; border: 3px solid #f59e0b; padding: 28px; border-radius: 16px; margin-top: 60px; }
     .premium-box h3 { color: #92400e; margin-top: 0; }
     #favorites { margin-top: 40px; }
+    .disclaimer { background: #f0f0f0; border-left: 4px solid #666; padding: 14px; margin-top: 50px; font-size: 13px; color: #555; border-radius: 4px; }
   </style>
 </head>
 <body>
@@ -81,6 +82,11 @@
     <input type="email" id="waitlistEmail" placeholder="Your email address"><br><br>
     <button onclick="joinWaitlist()">Join Waitlist</button>
     <p id="waitlistMsg" style="margin-top:10px;"></p>
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="disclaimer">
+    <strong>Disclaimer:</strong> Mood Scripture is an independent tool and is not affiliated with, endorsed by, or officially associated with The Church of Jesus Christ of Latter-day Saints. This application is provided as-is for personal spiritual reflection and support.
   </div>
 
   <script>
